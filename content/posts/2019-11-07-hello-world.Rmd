@@ -1,0 +1,106 @@
+---
+title: hello_world 
+subtitle: 
+author: Mark Druffel
+date: '2019-11-07'
+slug: hello_world
+categories:
+  - open-source
+tags:
+  - blogdown
+abstract: 
+  The inspiration for my first blogdown site.
+images: ~
+output:
+  blogdown::html_page:
+    toc: true
+---
+## Intro  
+At this year's RStudio Conf [David Robinson](http://varianceexplained.org/) discussed the importance of sharing work publicly in his talk ["The unreasonable effectiveness of public work."](https://resources.rstudio.com/rstudio-conf-2019/the-unreasonable-effectiveness-of-public-work). He attributed much of his own personal, professional success to the habit of sharing his work and encouraged others to adopt the habit. I had been considering writing a blog for some time and attended the [Advanced RMarkdown Workshop](https://arm.rbind.io/) that week at the conference where I learned how to use the R package [blogdown](https://github.com/rstudio/blogdown). As always, life got in the way so I'm now getting my blog up 11 months later :flushed: My goal is to develop the habit of using my blog in my daily workflow to capture what I learn to the benefit of my future self, and other aspiring data scientists.  
+
+In light of that, I thought this first post I would reflect on David's talk and share specific points that stuck with me and why I think many of them apply far beyond the blogosphere. 
+
+## Why Blog? 
+David provided a useful programming analogy - any time you have provided the same in-person advice three times you should consider writing a blog post. 
+
+<p align="center">
+```{r echo=F, message=F, warning=F, fig.align='center'}
+blogdown::shortcode('tweet', '928447584712253440')
+```
+</p>
+
+As a consumer of data science content, this advice really resonates with me. Blogs, books, and communities such as Stackoverflow, the [UC Business Analytics R Programming Guide](https://uc-r.github.io/), [Aligned Left](https://alignedleft.com/tutorials/d3), and [R4DS](https://r4ds.had.co.nz/) were the primary tools I used to get started as a data scientist. As we leverage resources to learn concepts and develop our own shortcuts of understanding, I think we have an obligation to share those with the community. It will help other newcomers get up to speed more quickly, but documenting our understanding will force us to confront particular details we may not fully understand - which will help us separate out what we do know from what we're still learning.
+
+David went on to reference some of his own early misconceptions regarding the arc of providing meaningful work to the community:
+
+[![](/posts/images/hello_world/goals.PNG){width=80% height=80%}](https://www.dropbox.com/s/jk7216yr30ztpdp/DavidRobinson-RStudio-2019-old.pdf?page=7)
+ 
+In his earlier years David thought that he needed to complete all steps in the above process before publishing (i.e. develop an idea, test it, document it, and get through the publishing process). In hindsight, he realized that publishing and collaboration was where he derived most of the value... with that in mind, why not share throughout the process? 
+ 
+> Anything still on your computer is, to a first approximation useless. When I look back at grad school the things I did that ended up not being publicized and just stayed on my computer - even I've forgotten them.
+
+This point cannot be overstated. Not only does writing help us to understand what we know more deeply, the documentation serves as a guide to our future selves when we encounter the same problem again.   
+
+David went on to reference Philip Guo's advice for academics that... 
+
+```{r echo=F}
+blogdown::shortcode('tweet', '1019978795862769665')
+```
+
+Throughout my career, I have encountered issues within organizations that have existed for years that are completely undocumented. Teams typically find workarounds to manage the specific issues and those workarounds simply exist as tribal knowledge. Teams frequently justify the lack of documentation with rationales such as "we're not going to waste time documenting a bug that will get fixed" or "you can't really document this it's just something you have to learn firsthand." Corporations tend to think of all documentation as technical documentation or user manuals which often further discourages users from documenting and sharing. However, lightweight communication tools such as blogs and tweets would enable employees to efficiently and effectively share their experiences and learn from one other. The time savings and risk mitigation the documentation would provide when senior leaders leave a team would be massive, but the documentation would also serve as requirements for the development teams who may need to make changes to the IT platforms serving as a catalyst to actually perform a more permanent fix. 
+
+This concept of sharing what we've learned and shortcuts we find extends itself to open sourcing tools. David referenced a simple tool he built to extract the coefficients from linear model and put them into a data frame. This simple concept became an integral package within the tidyverse's modeling ecosystem, [broom](https://github.com/tidymodels/broom). Regarding his experience with broom, David said:  
+
+> When you contribute to the community, you'll find the community contributes back. 
+
+When you build a tool that others find useful, they won't just use it, they will also contribute to iterate and extend that tool. Open source is a powerful idea within software development, but the data science community is often more closely integrated into non-technical teams and can help the non-technical teams understand and leverage this idea to benefit their communities as well. 
+
+The value that blogging, and more broadly sharing our work, has such high return on investment and it's incredibly extensible. I'd encourage everyone to listen to [David's talk](https://resources.rstudio.com/rstudio-conf-2019/the-unreasonable-effectiveness-of-public-work) as he covers this ideas more broadly and has more experience to bring to the conversation.
+
+## How to blog? 
+I am writing this blog in [Yihui Xie's](https://yihui.name/) [blogdown](https://github.com/rstudio/blogdown) package in R and netlify for hosting. There are dozens of resources avialable to choose from, I've provided the resources I used below:
+
+* [Up & Running with blogdown](https://alison.rbind.io/post/2017-06-12-up-and-running-with-blogdown/)
+* Making a Website Using Blogdown, Hugo, and GitHub Pages](https://amber.rbind.io/2016/12/19/website/)
+* [Rstudio Conf: Making Websites in R Markdown](https://arm.rbind.io/slides/blogdown.html#1)
+* [blogdown: Creating Websites with R Markdown](https://bookdown.org/yihui/blogdown/)
+* Setting up your blog with RStudio and blogdown:
+    + [Part I: Creating the blog](http://estebanmoro.org/post/2019-02-02-setting-up-your-blog-with-rstudio-and-blogdown-i-creating-the-blog/)
+    + [Part II: Workflow](http://estebanmoro.org/post/2019-02-01-setting-up-your-blog-with-rstudio-and-blogdown/)
+    + [Part III: Modify Your Theme](http://estebanmoro.org/post/2019-02-04-setting-up-your-blog-with-rstudio-and-blogdown-iii-modify-your-theme/)
+* [Markdown Basics](https://rmarkdown.rstudio.com/authoring_basics.html)
+* [R Markdown the Definitive Guide](https://bookdown.org/yihui/rmarkdown/)
+
+As a novice blogdown user, I'm not going to try to add to these resources at this point, but if you're considering writing a blog please give them a read. It only took a few minutes to have a blog up and running!
+
+## List of Blogs
+In light of this discussion about sharing our work I decided to go through my slightly overwhelming bookmarks bar to pull out data science blogs I've found useful over the years. I tried to focus on practical blogs with examples in code. This list is not intended to be exhaustive, but these resources have been my sherpa for the last few years so I want to share with others in search of content that can guide them through topics they are still learning. The list is mostly R enthusiasts because R is the #1 tool in my data science toolbelt, but there are some blogs focused more on `D3.js`, `python`, and a few other languanges / frameworks. 
+
+```{r echo=F, error=F, message=F}
+list <- readxl::read_excel(paste0(here::here(),'/content/posts/data/hello_world/list_of_blogs.xlsx'))
+dt_list <- list %>% 
+  dplyr::select(Person_Org,Category,Tech_Focus,Twitter_Handle,URL) %>% 
+  dplyr::arrange(Person_Org) %>% 
+  dplyr::mutate(Twitter = dplyr::if_else(
+                          is.na(Twitter_Handle)==F,
+                          paste0('<a href=\"https://twitter.com/',Twitter_Handle,'\">',Twitter_Handle,'</a>'),
+                          ''),
+                Person_Org = dplyr::if_else(
+                          is.na(URL)==F,
+                          paste0('<a href=\"',URL,'\">',Person_Org,'</a>'),
+                          '')) %>% 
+  dplyr::select(Person_Org,Twitter,Tech_Focus) %>% 
+  dplyr::rename('Person / Org'='Person_Org','Languages'='Tech_Focus') %>% 
+  dplyr::select(`Person / Org`, Twitter)
+dt_table <- DT::datatable(dt_list, escape = F)
+css_sheet <- 'datatable_hugoHermet.css'
+invisible(file.copy(from=paste0(here::here(),'/content/posts/css/hello_world/',css_sheet),to=paste0(dt_table$dependencies[[1]]$src$file ,'/css/',css_sheet),overwrite = T))
+dt_table$dependencies[[1]]$stylesheet[1] <- 'css/datatable_hugoHermet.css'
+dt_table$dependencies[[1]]$stylesheet[2] <- 'css/datatable_hugoHermet.css'  
+dt_table 
+```
+<sub style="font-size: .8em;">
+**Notes:**  
+* The [bookdown archive](https://bookdown.org/home/archive/) is a list of bookdown sites RStudio maintains. That is a goldmine of information. For those new to R I highly recommend starting with [R for Data Science](https://r4ds.had.co.nz/).  
+* [Mark Sellors' Blogdown List](https://awesome-blogdown.com/) is a list of blogs made with blogdown that anyone can add to on Github. It's a really great site specifically for blogdown users, but this list is not intended to be limited to just blogdown. 
+</sub>
