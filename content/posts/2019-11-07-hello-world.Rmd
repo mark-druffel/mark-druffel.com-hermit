@@ -90,8 +90,8 @@ dt_list <- list %>%
                           paste0('<a href=\"',URL,'\">',Person_Org,'</a>'),
                           '')) %>% 
   dplyr::select(Person_Org,Twitter,Tech_Focus) %>% 
-  dplyr::rename('Person / Org'='Person_Org','Languages'='Tech_Focus') %>% 
-  dplyr::select(`Person / Org`, Twitter)
+  dplyr::rename('Person / Org Website'='Person_Org','Languages'='Tech_Focus') %>% 
+  dplyr::select(`Person / Org Website`, Twitter)
 dt_table <- DT::datatable(dt_list, escape = F)
 css_sheet <- 'datatable_hugoHermet.css'
 invisible(file.copy(from=paste0(here::here(),'/content/posts/css/hello_world/',css_sheet),to=paste0(dt_table$dependencies[[1]]$src$file ,'/css/',css_sheet),overwrite = T))
