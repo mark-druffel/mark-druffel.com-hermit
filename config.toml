@@ -1,18 +1,16 @@
 baseURL = "https://www.mark-druffel.com/"
 languageCode = "en-us"
 defaultContentLanguage = "en"
-description = "My blog about R, D3, noSQL, and wonderful-wide world of analytics."
 title = "Mark Druffel"
 theme = "hermit"
 # enableGitInfo = true
 pygmentsCodefences  = true
 pygmentsUseClasses  = true
-  homeSubtitle = "My blog about R, D3, noSQL, and wonderful-wide world of analytics."
 # hasCJKLanguage = true  # If Chinese/Japanese/Korean is your main content language, enable this to make wordCount works right.
 rssLimit = 10  # Maximum number of items in the RSS feed.
 copyright = "This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License." # This message is only used by the RSS template.
 enableEmoji = true  # Shorthand emojis in content files - https://gohugo.io/functions/emojify/
-HUGO_VERSION = "0.59.1"
+ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
 # googleAnalytics = "UA-123-45"
 # disqusShortname = "yourdiscussshortname"
 
@@ -25,7 +23,7 @@ HUGO_VERSION = "0.59.1"
   # nofollowLinks = true
 
 [taxonomies]
-  tag = "tags"
+tags = ["data science","blogdown", "R", "RStudio", "data","analytics","shiny","rmarkdown"]
   # Categories are disabled by default.
 
 [params]
@@ -33,12 +31,12 @@ HUGO_VERSION = "0.59.1"
   dateformShort   = "Jan 2"
   dateformNum     = "2006-01-02"
   dateformNumTime = "2006-01-02 15:04 -0700"
-  #navbarTitle = "Mark Druffel"
+  navbarTitle = ""
+  description = "My blog about R, D3, noSQL, and wonderful-wide world of analytics."
 
 
 
   # Metadata mostly used in document's head
-  #description = "I :heart: beer & R"
   # images = [""]
   themeColor = "#494f5c"
 
