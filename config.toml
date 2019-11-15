@@ -1,6 +1,7 @@
 baseURL = "https://www.mark-druffel.com/"
 languageCode = "en-us"
 defaultContentLanguage = "en"
+description: "Mark Druffel's personal blog about R, D3, noSQL, and wonderful-wide world of data."
 title = "Mark Druffel"
 theme = "hermit"
 # enableGitInfo = true
