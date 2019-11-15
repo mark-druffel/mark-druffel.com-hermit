@@ -1,8 +1,7 @@
 baseURL = "https://www.mark-druffel.com/"
 languageCode = "en-us"
 defaultContentLanguage = "en"
-# This will hopefully replace the description that's showing up on search engines... 
-description: "Mark Druffel's personal blog about R, D3, noSQL, and wonderful-wide world of data."
+description = "My blog about R, D3, noSQL, and wonderful-wide world of analytics."
 title = "Mark Druffel"
 theme = "hermit"
 # enableGitInfo = true
