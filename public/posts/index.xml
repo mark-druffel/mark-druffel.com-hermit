@@ -1,20 +1,20 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
 	<channel>
 		<title>Posts on Mark Druffel</title>
-		<link>/posts/</link>
+		<link>https://www.mark-druffel.com/posts/</link>
 		<description>Recent content in Posts on Mark Druffel</description>
 		<generator>Hugo -- gohugo.io</generator>
 		<language>en-us</language>
 		<copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
 		<lastBuildDate>Thu, 07 Nov 2019 00:00:00 +0000</lastBuildDate>
-		<atom:link href="/posts/index.xml" rel="self" type="application/rss+xml" />
+		<atom:link href="https://www.mark-druffel.com/posts/index.xml" rel="self" type="application/rss+xml" />
 		
 		<item>
 			<title>hello_world</title>
-			<link>/posts/hello_world/</link>
+			<link>https://www.mark-druffel.com/posts/hello_world/</link>
 			<pubDate>Thu, 07 Nov 2019 00:00:00 +0000</pubDate>
 			
-			<guid>/posts/hello_world/</guid>
+			<guid>https://www.mark-druffel.com/posts/hello_world/</guid>
 			<description>IntroWhy Blog?How to blog?My List of DS Blogs &amp;amp; Twitter AccountsIntroAt this year’s RStudio Conf David Robinson discussed the importance of sharing work publicly in his talk “The unreasonable effectiveness of public work.”. He attributed much of his own personal, professional success to the habit of sharing his work and encouraged others to adopt the habit. I had long considered writing a blog documenting much of my work.</description>
 			<content type="html"><![CDATA[
 <script src="/rmarkdown-libs/htmlwidgets/htmlwidgets.js"></script>
@@ -72,7 +72,7 @@
 <p>I am writing this blog in <a href="https://yihui.name/">Yihui Xie’s</a> <a href="https://github.com/rstudio/blogdown">blogdown</a> package in R, with Github for continuous deployment, and Netlify for hosting. There are dozens of resources avialable to choose from, I’ve provided the resources I used below:</p>
 <ul>
 <li><a href="https://alison.rbind.io/post/2017-06-12-up-and-running-with-blogdown/">Up &amp; Running with blogdown</a></li>
-<li>Making a Website Using Blogdown, Hugo, and GitHub Pages](<a href="https://amber.rbind.io/2016/12/19/website/" class="uri">https://amber.rbind.io/2016/12/19/website/</a>)</li>
+<li><a href="https://amber.rbind.io/2016/12/19/website/">Making a Website Using Blogdown, Hugo, and GitHub Pages</a></li>
 <li><a href="https://arm.rbind.io/slides/blogdown.html#1">Rstudio Conf: Making Websites in R Markdown</a></li>
 <li><a href="https://bookdown.org/yihui/blogdown/">blogdown: Creating Websites with R Markdown</a></li>
 <li>Setting up your blog with RStudio and blogdown:
@@ -94,7 +94,7 @@
 <sub style="font-size: .8em;">
 <strong>Notes:</strong><br />
 * The <a href="https://bookdown.org/home/archive/">bookdown archive</a> is a list of bookdown sites RStudio maintains. That is a goldmine of information. For those new to R I highly recommend starting with <a href="https://r4ds.had.co.nz/">R for Data Science</a>.<br />
-* <a href="https://awesome-blogdown.com/">Mark Sellors’ Blogdown List</a> is a list of blogs made with blogdown that anyone can add to on Github. It’s a really great site specifically for blogdown users, but this list is not intended to be limited to just blogdown.
+* <a href="https://awesome-blogdown.com/">Mark Sellors’ Blogdown List</a> is a list of blogs made with blogdown that anyone can add to on Github.
 </sub></p>
 </div>
 ]]></content>

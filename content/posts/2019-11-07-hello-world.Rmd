@@ -57,7 +57,7 @@ Hopefully these few anecdotes help demonstrate that sharing our work is benefici
 I am writing this blog in [Yihui Xie's](https://yihui.name/) [blogdown](https://github.com/rstudio/blogdown) package in R, with Github for continuous deployment, and Netlify for hosting. There are dozens of resources avialable to choose from, I've provided the resources I used below:
 
 * [Up & Running with blogdown](https://alison.rbind.io/post/2017-06-12-up-and-running-with-blogdown/)
-* Making a Website Using Blogdown, Hugo, and GitHub Pages](https://amber.rbind.io/2016/12/19/website/)
+* [Making a Website Using Blogdown, Hugo, and GitHub Pages](https://amber.rbind.io/2016/12/19/website/)
 * [Rstudio Conf: Making Websites in R Markdown](https://arm.rbind.io/slides/blogdown.html#1)
 * [blogdown: Creating Websites with R Markdown](https://bookdown.org/yihui/blogdown/)
 * Setting up your blog with RStudio and blogdown:
@@ -98,5 +98,5 @@ dt_table
 <sub style="font-size: .8em;">
 **Notes:**  
 * The [bookdown archive](https://bookdown.org/home/archive/) is a list of bookdown sites RStudio maintains. That is a goldmine of information. For those new to R I highly recommend starting with [R for Data Science](https://r4ds.had.co.nz/).  
-* [Mark Sellors' Blogdown List](https://awesome-blogdown.com/) is a list of blogs made with blogdown that anyone can add to on Github. It's a really great site specifically for blogdown users, but this list is not intended to be limited to just blogdown. 
+* [Mark Sellors' Blogdown List](https://awesome-blogdown.com/) is a list of blogs made with blogdown that anyone can add to on Github. 
 </sub>

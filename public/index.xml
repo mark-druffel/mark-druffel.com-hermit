@@ -2,31 +2,31 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Mark Druffel</title>
-    <link>/</link>
+    <link>https://www.mark-druffel.com/</link>
     <description>Recent content on Mark Druffel</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
     <lastBuildDate>Thu, 07 Nov 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://www.mark-druffel.com/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
       <title>hello_world</title>
-      <link>/posts/hello_world/</link>
+      <link>https://www.mark-druffel.com/posts/hello_world/</link>
       <pubDate>Thu, 07 Nov 2019 00:00:00 +0000</pubDate>
       
-      <guid>/posts/hello_world/</guid>
+      <guid>https://www.mark-druffel.com/posts/hello_world/</guid>
       <description>IntroWhy Blog?How to blog?My List of DS Blogs &amp;amp; Twitter AccountsIntroAt this year’s RStudio Conf David Robinson discussed the importance of sharing work publicly in his talk “The unreasonable effectiveness of public work.”. He attributed much of his own personal, professional success to the habit of sharing his work and encouraged others to adopt the habit. I had long considered writing a blog documenting much of my work.</description>
     </item>
     
     <item>
       <title>About Me</title>
-      <link>/about/</link>
+      <link>https://www.mark-druffel.com/about/</link>
       <pubDate>Wed, 30 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>/about/</guid>
+      <guid>https://www.mark-druffel.com/about/</guid>
       <description>Hi, I&amp;rsquo;m Mark Druffel!
 I&amp;rsquo;m a data science neophyte, I mutate ☕ + 🍺 into R code.
 Motivation
