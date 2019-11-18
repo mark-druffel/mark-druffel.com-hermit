@@ -1,0 +1,19 @@
+---
+title: hello_world
+author: Mark Druffel
+date: '2019-11-08'
+slug: hello_world
+categories:
+  - open-source
+tags:
+  - blogdown
+toc: no
+images: ~
+---
+
+## Intro  
+At this year's RStudio Conf [David Robinson](http://varianceexplained.org/) discussed the importance of sharing work publicly in his talk ["The unreasonable effectiveness of public work."](https://resources.rstudio.com/rstudio-conf-2019/the-unreasonable-effectiveness-of-public-work). He attributed much of his own personal, professional success to the habit of sharing his work and encouraged others to adopt the habit. I had long considered writing a blog documenting much of my work. I attended the [Advanced RMarkdown Workshop](https://arm.rbind.io/)  at the conference and learned, among other things, the blogdown [blogdown](https://github.com/rstudio/blogdown) package. I started a blog in the workshop, but put it down until now (11 months later) because my day job got in the way :flushed: My goal is to develop the habit of using my blog in my daily workflow to capture what I learn for the benefit of other aspiring data scientists and my future self.  
+
+In light of that, I thought this first post I would reflect on David's talk to share specific points that stuck with me and why I believe that managing a blog to share your work is one of the most transformative changes a data scientist can make. 
+
+

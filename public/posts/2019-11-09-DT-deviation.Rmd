@@ -1,0 +1,17 @@
+---
+title: hello_world
+author: Mark Druffel
+date: '2019-11-07'
+slug: hello_world
+
+categories:
+  - open-source
+tags:
+  - blogdown
+draft: true
+images: ~
+output:
+  blogdown::html_page:
+    toc: true
+---
+## Intro  

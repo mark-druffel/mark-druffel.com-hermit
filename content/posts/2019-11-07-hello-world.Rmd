@@ -1,6 +1,5 @@
 ---
-title: hello_world 
-subtitle: 
+title: hello_world
 author: Mark Druffel
 date: '2019-11-07'
 slug: hello_world
@@ -8,34 +7,31 @@ categories:
   - open-source
 tags:
   - blogdown
-abstract: 
-  The inspiration for my first blogdown site.
 images: ~
 output:
   blogdown::html_page:
     toc: true
 ---
+  
 ## Intro  
-At this year's RStudio Conf [David Robinson](http://varianceexplained.org/) discussed the importance of sharing work publicly in his talk ["The unreasonable effectiveness of public work."](https://resources.rstudio.com/rstudio-conf-2019/the-unreasonable-effectiveness-of-public-work). He attributed much of his own personal, professional success to the habit of sharing his work and encouraged others to adopt the habit. I had been considering writing a blog for some time and attended the [Advanced RMarkdown Workshop](https://arm.rbind.io/) that week at the conference where I learned how to use the R package [blogdown](https://github.com/rstudio/blogdown). As always, life got in the way so I'm now getting my blog up 11 months later :flushed: My goal is to develop the habit of using my blog in my daily workflow to capture what I learn to the benefit of my future self, and other aspiring data scientists.  
+At this year's RStudio Conf [David Robinson](http://varianceexplained.org/) discussed the importance of sharing work publicly in his talk ["The unreasonable effectiveness of public work."](https://resources.rstudio.com/rstudio-conf-2019/the-unreasonable-effectiveness-of-public-work). He attributed much of his own personal, professional success to the habit of sharing his work and encouraged others to adopt the habit. I had long considered writing a blog documenting much of my work. I attended the [Advanced RMarkdown Workshop](https://arm.rbind.io/)  at the conference and learned, among other things, the blogdown [blogdown](https://github.com/rstudio/blogdown) package. I started a blog in the workshop, but put it down until now (11 months later) because my day job got in the way :flushed: My goal is to develop the habit of using my blog in my daily workflow to capture what I learn for the benefit of other aspiring data scientists and my future self.  
 
-In light of that, I thought this first post I would reflect on David's talk and share specific points that stuck with me and why I think many of them apply far beyond the blogosphere. 
+In light of that, I thought this first post I would reflect on David's talk to share specific points that stuck with me and why I believe that managing a blog to share your work is one of the most transformative changes a data scientist can make. 
 
 ## Why Blog? 
-David provided a useful programming analogy - any time you have provided the same in-person advice three times you should consider writing a blog post. 
+David provided a useful programming analogy:
 
-<p align="center">
 ```{r echo=F, message=F, warning=F, fig.align='center'}
 blogdown::shortcode('tweet', '928447584712253440')
 ```
-</p>
 
-As a consumer of data science content, this advice really resonates with me. Blogs, books, and communities such as Stackoverflow, the [UC Business Analytics R Programming Guide](https://uc-r.github.io/), [Aligned Left](https://alignedleft.com/tutorials/d3), and [R4DS](https://r4ds.had.co.nz/) were the primary tools I used to get started as a data scientist. As we leverage resources to learn concepts and develop our own shortcuts of understanding, I think we have an obligation to share those with the community. It will help other newcomers get up to speed more quickly, but documenting our understanding will force us to confront particular details we may not fully understand - which will help us separate out what we do know from what we're still learning.
+As a consumer of data science content, this advice really resonates with me. Blogs, books, and communities such as Stackoverflow, the [UC Business Analytics R Programming Guide](https://uc-r.github.io/), [Aligned Left](https://alignedleft.com/tutorials/d3), and [R4DS](https://r4ds.had.co.nz/) were the primary tools I used to get started as a data scientist. As we leverage resources to learn concepts and develop our own shortcuts of understanding, I think we have an obligation to share with the community. It helps newcomers get up to speed more quickly and forces us to confront particular details we may not fully understand. Confronting these details helps us separate out what we do know from what we're still learning so we know where to focus. 
 
 David went on to reference some of his own early misconceptions regarding the arc of providing meaningful work to the community:
 
 [![](/posts/images/hello_world/goals.PNG){width=80% height=80%}](https://www.dropbox.com/s/jk7216yr30ztpdp/DavidRobinson-RStudio-2019-old.pdf?page=7)
  
-In his earlier years David thought that he needed to complete all steps in the above process before publishing (i.e. develop an idea, test it, document it, and get through the publishing process). In hindsight, he realized that publishing and collaboration was where he derived most of the value... with that in mind, why not share throughout the process? 
+In his earlier years, David thought that he needed to complete all steps in the above process before publishing (i.e. develop an idea, test it, document it, and get through the publishing process). In hindsight, he realized that publishing and collaboration was where he derived most of the value... with that in mind, why not share throughout the process? 
  
 > Anything still on your computer is, to a first approximation useless. When I look back at grad school the things I did that ended up not being publicized and just stayed on my computer - even I've forgotten them.
 
@@ -47,18 +43,18 @@ David went on to reference Philip Guo's advice for academics that...
 blogdown::shortcode('tweet', '1019978795862769665')
 ```
 
-Throughout my career, I have encountered issues within organizations that have existed for years that are completely undocumented. Teams typically find workarounds to manage the specific issues and those workarounds simply exist as tribal knowledge. Teams frequently justify the lack of documentation with rationales such as "we're not going to waste time documenting a bug that will get fixed" or "you can't really document this it's just something you have to learn firsthand." Corporations tend to think of all documentation as technical documentation or user manuals which often further discourages users from documenting and sharing. However, lightweight communication tools such as blogs and tweets would enable employees to efficiently and effectively share their experiences and learn from one other. The time savings and risk mitigation the documentation would provide when senior leaders leave a team would be massive, but the documentation would also serve as requirements for the development teams who may need to make changes to the IT platforms serving as a catalyst to actually perform a more permanent fix. 
+Throughout my career, I have encountered issues within organizations that have existed for years, and yet are completely undocumented. Teams typically find workarounds to manage the specific issues and those workarounds simply exist as tribal knowledge. Teams frequently justify the lack of documentation with rationales such as "we're not going to waste time documenting a bug that will get fixed" or "you can't really document this it's just something you have to learn firsthand." Corporations tend to think of all documentation as technical documentation or user manuals, which often further discourages users from documenting and sharing. However, lightweight communication tools such as blogs and tweets would enable employees to efficiently and effectively share their experiences and learn from one other. This would save significant time and mitigate risk when senior leaders leave a team. Further, it would serve as requirements for the development teams who may need to make technology changes.  
 
-This concept of sharing what we've learned and shortcuts we find extends itself to open sourcing tools. David referenced a simple tool he built to extract the coefficients from linear model and put them into a data frame. This simple concept became an integral package within the tidyverse's modeling ecosystem, [broom](https://github.com/tidymodels/broom). Regarding his experience with broom, David said:  
+The value of sharing extends beyond sharing what we've learned. David referenced a simple function he wrote to extract the coefficients from linear model and put them into a data frame. This simple function became an integral package within the tidyverse's modeling ecosystem, [broom](https://github.com/tidymodels/broom). If David had not shared that early prototype hundreds of R users would still grapple with the clunky exercise of extracting data from the models they build for interpretation. The value delivered by sharing this work had a widespread impact across the R community. Regarding his experience with broom, David said:  
 
 > When you contribute to the community, you'll find the community contributes back. 
 
-When you build a tool that others find useful, they won't just use it, they will also contribute to iterate and extend that tool. Open source is a powerful idea within software development, but the data science community is often more closely integrated into non-technical teams and can help the non-technical teams understand and leverage this idea to benefit their communities as well. 
+When you build a tool that others find useful, they won't just use it... they will contribute by iterating over it and extending it. Open-source is a powerful idea within software development. The data science community relies on open-source for growth and, given their close relationships with non-technical teams, they can help their non-technical business partners understand and leverage blogging and open-sourcing to benefit their communities as well. I personally have inherited dozens of 100MB Excel workbooks that take hours upon hours to decode. Imagine how much time business users could save by simply saving their thoughts during the process of building these workbooks. I sometimes find myself dreaming of business users checking in their  Excel workbooks on git when I hear an individual say they lost hours of work because they forgot to save a prior version of a workbook :sob:  
 
-The value that blogging, and more broadly sharing our work, has such high return on investment and it's incredibly extensible. I'd encourage everyone to listen to [David's talk](https://resources.rstudio.com/rstudio-conf-2019/the-unreasonable-effectiveness-of-public-work) as he covers this ideas more broadly and has more experience to bring to the conversation.
+Hopefully these few anecdotes help demonstrate that sharing our work is beneficial to ourselves and the community as a whole. I'd encourage everyone to listen to [David's talk](https://resources.rstudio.com/rstudio-conf-2019/the-unreasonable-effectiveness-of-public-work) as he covers this ideas more broadly and has more experience to bring to the conversation.
 
 ## How to blog? 
-I am writing this blog in [Yihui Xie's](https://yihui.name/) [blogdown](https://github.com/rstudio/blogdown) package in R and netlify for hosting. There are dozens of resources avialable to choose from, I've provided the resources I used below:
+I am writing this blog in [Yihui Xie's](https://yihui.name/) [blogdown](https://github.com/rstudio/blogdown) package in R, with Github for continuous deployment, and Netlify for hosting. There are dozens of resources avialable to choose from, I've provided the resources I used below:
 
 * [Up & Running with blogdown](https://alison.rbind.io/post/2017-06-12-up-and-running-with-blogdown/)
 * Making a Website Using Blogdown, Hugo, and GitHub Pages](https://amber.rbind.io/2016/12/19/website/)
@@ -71,10 +67,10 @@ I am writing this blog in [Yihui Xie's](https://yihui.name/) [blogdown](https://
 * [Markdown Basics](https://rmarkdown.rstudio.com/authoring_basics.html)
 * [R Markdown the Definitive Guide](https://bookdown.org/yihui/rmarkdown/)
 
-As a novice blogdown user, I'm not going to try to add to these resources at this point, but if you're considering writing a blog please give them a read. It only took a few minutes to have a blog up and running!
+As a novice blogdown user, I'm not going to try to add to these resources at this point, but I will say that using Github for continous deployment has been a joy so far. I can make tiny tweaks to a post and push it to Netlify with one function call! The overall process with blogdown is pretty painless although everything is still a little "black boxy" because I have not found any extensive blogdown resources using the template I chose. That being said, tt only took a few minutes to have the template up and running. Once the template is up, you can simply make modifications and continuously release changes. 
 
-## List of Blogs
-In light of this discussion about sharing our work I decided to go through my slightly overwhelming bookmarks bar to pull out data science blogs I've found useful over the years. I tried to focus on practical blogs with examples in code. This list is not intended to be exhaustive, but these resources have been my sherpa for the last few years so I want to share with others in search of content that can guide them through topics they are still learning. The list is mostly R enthusiasts because R is the #1 tool in my data science toolbelt, but there are some blogs focused more on `D3.js`, `python`, and a few other languanges / frameworks. 
+## My List of DS Blogs & Twitter Accounts
+In light of this discussion, I decided to go through my bookmarks bar to pull out data science blogs I've found useful over the years and include corresponding Twitter accounts. Twitter has been an incredible resource for me over the last two years keeping up with new package releases, finding links to useful content, and learning about opportunities to meet other data scientists (e.g. conferences, unconferences, etc.). I tried to focus on practical blogs with examples in code - these resources have been my sherpa for the last few years. The list is somewhat R-centric because R is the #1 tool in my data science toolbelt. However, there are a few resources focused on `D3.js`, `python`, and others.  
 
 ```{r echo=F, error=F, message=F}
 list <- readxl::read_excel(paste0(here::here(),'/content/posts/data/hello_world/list_of_blogs.xlsx'))

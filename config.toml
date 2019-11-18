@@ -23,7 +23,7 @@ ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
   # nofollowLinks = true
 
 [taxonomies]
-tags = ["data science","blogdown", "R", "RStudio", "data","analytics","shiny","rmarkdown"]
+#tags = ["data science","blogdown", "R", "RStudio", "data","analytics","shiny","rmarkdown"]
   # Categories are disabled by default.
 
 [params]
@@ -31,8 +31,8 @@ tags = ["data science","blogdown", "R", "RStudio", "data","analytics","shiny","r
   dateformShort   = "Jan 2"
   dateformNum     = "2006-01-02"
   dateformNumTime = "2006-01-02 15:04 -0700"
-  navbarTitle = ""
-  description = "My blog about R, D3, noSQL, and wonderful-wide world of analytics."
+  #navbarTitle = ""
+  #description = "My blog about R, D3, noSQL, and wonderful-wide world of analytics."
 
 
 
@@ -50,7 +50,7 @@ tags = ["data science","blogdown", "R", "RStudio", "data","analytics","shiny","r
   # Toggling this option needs to rebuild SCSS, requires Hugo extended version
   enableRobotsTXT = true
   justifyContent = false  # Set "text-align: justify" to `.content`.
-  ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
+  #ignoreFiles = ["\\.Rmd$", "\\.Rmarkdown$", "_files$", "_cache$"]
   relativeURLs = true
   relatedPosts = false  # Add a related content section to all single posts page
 

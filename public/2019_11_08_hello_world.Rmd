@@ -1,0 +1,13 @@
+---
+title: ''
+author: Mark Druffel
+date: '2019-11-06'
+slug: hello_world
+categories:
+  - open-source
+tags:
+  - blogdown
+comments: no
+images: ~
+---
+
