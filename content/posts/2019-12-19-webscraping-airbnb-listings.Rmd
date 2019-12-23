@@ -1,0 +1,218 @@
+---
+title: Webscraping Airbnb Listings
+author: Mark Druffel
+date: '2019-12-02'
+draft: TRUE
+slug: airbnb_webscraping
+categories: []
+tags:
+  - webscraping
+  - rvest
+  - RSelenium
+  - docker
+images: ~
+output:
+  blogdown::html_page:
+    toc: true
+---
+```{r setup, cache = F, include=F, echo=F}
+library(knitr)
+rm(list=ls())
+knitr::opts_chunk$set(echo=FALSE, warning=FALSE, message=FALSE, include=FALSE, fig.align="center")
+library(rvest)
+library(xml2)
+```
+## Intro  
+I got married earlier this year :couple_with_heart: We decided to wait to have our honeymoon so we're now in the process of planning. We booked our flights into Lisbon, Portugal and out of Barcelona, Spain! We want to book apartments for a few of the bigger cities ahead of time to make sure we get comfortable accomodations for the places we plan to stay in the longest. One issue we're having is searching apartments with queen and king beds only. Double beds are so common in Europe, but I'm ~6'4" and my wife is ~5'7". A double bed just gets too crowded for us to sleep comfortably... Unfortunately, most of the rental sites (e.g. Airbnb, VRBO, etc.) don't provide filtering on bed size :confused: Most of the posts have the information in them so I decided to try to build a little web scraper to help us with our search. 
+
+In my experience, web scraping can be a simple, lightweight process or a difficult, painful process depending mostly on the design of the site and exactly what data you are trying to extract. Regarding the design of the site, one major consideration is whether you want to scrape a [static or dynamic website](https://techdifferences.com/difference-between-static-and-dynamic-web-pages.html). Dynamic sites introduce more complexity in the process so they're generally harder. However, most sites you will want to scrape are dynamic given that the more data a site contains the more likely the team is to use dynamic technologies...  
+
+## Search Page
+First, I need to find a page I want to scrape. In order to do that, I opened [Airbnb](https://www.airbnb.com/) and navigated to the [stays category search page](https://www.airbnb.com/s/homes). I searched my first destination and used the existing search parameters I wanted to apply (e.g. dates, place type, etc.). The [results](https://www.airbnb.com/s/Lisbon--Portugal/homes?refinement_paths%5B%5D=%2Fhomes&screen_size=large&search_type=search_query&checkin=2020-03-19&checkout=2020-03-22&adults=2&room_types%5B%5D=Entire%20home%2Fapt&min_bedrooms=1') gave me a page with listings and a map. 
+
+![](/posts/images/webscraping_airbnb/Airbnb_Search_Page.PNG){width=100% height=100%}
+
+The listings only show a few high-level attributes, but I can open one of the listings to get more info.   
+
+![](/posts/images/webscraping_airbnb/Airbnb_Search_Page_Click.PNG){width=100% height=100%}
+
+I looked through a several listings and noticed the bed size is usually listed in an icon (shown in the example below) - this is probably a good starting point for gathering the info. A few of the listings I reviewed did not have these icons, but they most of those mentioned bed sizes in "the space" paragraph. One listing did not have the icons or mention bed size in the description, but it did happen to have a customer review that. I can try to collect those data points as well, but  if it's simple enough.   
+
+![](/posts/images/webscraping_airbnb/property_page_scroll.gif)
+
+Given that this data is on the listing's page, I'll have collect all the links (URLs) for each listing page. Then I can navigate to each page and scrape the data. The initial [results](https://www.airbnb.com/s/Lisbon--Portugal/homes?refinement_paths%5B%5D=%2Fhomes&screen_size=large&search_type=search_query&checkin=2020-03-19&checkout=2020-03-22&adults=2&room_types%5B%5D=Entire%20home%2Fapt&min_bedrooms=1') page with the listings and map should contain the URLs since clicking on the listing forwards me to the listing page. 
+
+In order to scrape the URLs, we'll start with our web browser. I'm using Firefox, but any modern browser should work fine, but some of the names they use in the tools are slightly different. We can open **web developer tools** (Windows hotkey `F12`), navigate to the **inspector** tab (**elements** tab in Chrome), and inspect the element on the webpage. We can then identify the CSS selector associated with the element and highlight all elements on the page. Make sure to check to see if that CSS selector will give us all the data we want - the initial CSS selector I chose appeared to exlude Airbnb Plus listings, but I moved up a node to `._i24ijs` and it captured all the listings on the first page. I generally rely a bit on trial and error to find the appropriate CSS selector and us sum checks to validate my approach. Before I do that, I want to make sure I can get that bed size info out of the listing page.   
+
+![](/posts/images/webscraping_airbnb/inspect_property_listing_element_selector.gif)
+
+Once we have the CSS selector, we should pull the search page into R and extract the listing URLs. We can read the search page into our R environment using `xml2::read_html`. This creates a pointer, which I've named  `search_page`, to the Airbnb search webpage that we can interact with using rvest. We can interact with it in various ways including extracting data and navigating the site (e.g. clicking links like the next page button). 
+
+```{r echo=T, include=T}
+search_page <- xml2::read_html('https://www.airbnb.com/s/Lisbon--Portugal/homes?refinement_paths%5B%5D=%2Fhomes&screen_size=large&search_type=search_query&checkin=2020-03-19&checkout=2020-03-22&adults=2&room_types%5B%5D=Entire%20home%2Fapt&min_bedrooms=1')
+```
+
+In order to extract the URLs of each listing, we first need to isolate the listings using our CSS selector. We use `rvest::html_nodes` to focus on a specific html node (i.e. `._i24ijs`). We can see when we extract `._i24ijs` that we get 18 elements, which matches the number of listings Airbnb shows on the search page.
+```{r echo=T, include=T}
+listings <- search_page %>% rvest::html_nodes(css = '._i24ijs')
+length(listings)
+```
+
+We want to pull the URLs, but it'd also be good to maintain other parts of the listing in a tidy format (i.e. to understand what I mean by **tidy format** refer to [R4Ds](https://r4ds.had.co.nz/explore-intro.html)). It'd be helpful to have each listing URL with the description provided in the search page in a data frame. Looking at the search page (again in my web developer tools), I can see the description seems to be called `aria-label` (see below).
+
+![](/posts/images/webscraping_airbnb/Airbnb_Search_Aria-label.PNG)
+
+We can pull the description using `rvest::html_attr` by naming `aria-label` as the html attribute value we want to extract. 
+```{r echo=T, include=T}
+search_page %>% 
+  rvest::html_nodes(css = '._i24ijs') %>% 
+  rvest::html_attr(name = 'aria-label') %>% 
+  tibble::tibble(Description=.) %>% 
+  dplyr::top_n(n=3) %>% ## to show the top 3 rows only, for brevity
+  kableExtra::kable(.) %>% 
+  kableExtra::kable_styling(font_size = 7)
+```
+
+We can use the same process to pull the URL by naming `href`, which is the standard html attribute for hyperlinks, as the html attribute value. Notice the URLs start with `/` rather than `https:`. These aren't absolute URLs so we'll need to add the initial path. I just tested the first URL adding `https://www.airbnb.com` in front and it took me to the listing, I can use `paste0` to add the base URL in front of each `href` when I pull it.   
+```{r echo=T, include=T}
+search_page %>% 
+  rvest::html_nodes(css = '._i24ijs') %>% 
+  rvest::html_attr(name = 'href') %>% 
+  tibble::tibble(URL=.) %>% 
+  dplyr::top_n(n=3) %>% ## to show the top 3 rows only, for brevity
+  kableExtra::kable(.) %>% 
+  kableExtra::kable_styling(font_size = 7)
+```
+
+We can put int all together wrapping the two calls in `tibble::tibble`.
+```{r echo=T, include=T}
+listings_df <- tibble::tibble(Description = search_page %>%
+                 rvest::html_nodes(css = '._i24ijs') %>%
+                 rvest::html_attr(name = 'aria-label'),
+               URL = search_page %>%
+                 rvest::html_nodes(css = '._i24ijs') %>%
+                 rvest::html_attr(name= 'href')) %>% 
+  dplyr::mutate(URL = paste0('https://www.airbnb.com',URL)) 
+listings_df %>% 
+  dplyr::top_n(n=3) %>% ## to show the top 3 rows only, for brevity
+  kableExtra::kable(.) %>%
+  kableExtra::kable_styling(font_size = 7)
+```
+
+Now we have all of the listings from the first page of search results. We can use the URLs to pull each listing page into R and extract the data. We can use `purrr::map` to easily execute `xml2::read_html` on each URL. This gives us a list of all the listing pages which we can extract the data from together.  
+
+```{r echo=T, include=T}
+listing_pages <- listings_df$URL %>% 
+  purrr::map(xml2::read_html)
+```
+<sub style="font-size: .7em;">*Note:* if you are unfamiliar with `purrr::map` I'd recommend Jenny Bryan's [tutorial](https://jennybc.github.io/purrr-tutorial/ls03_map-function-syntax.html) and Rebecca Barter's [tutorial](http://www.rebeccabarter.com/blog/2019-08-19_purrr/). They're both excellent guides to getting started with the`map` family. </sub>  
+
+We need to find the CSS selector for the bed icon we found earlier when inspecting a listing page. We can go back into our web developer tools and inspect the element. I can see the element is called `_9342og`. I inspected a second listing as well to confirm the CSS selector is right and the same on other pages.  
+
+![](/posts/images/webscraping_airbnb/Bed_Icon_CSS.png)
+
+We can continue to use `purrr::map` to interact with all the pages at the same time to pull out the data. We can call the `listing_pages` object, pass it to `purrr::map`, and apply operations to each indivual listing page. We'll focus on our CSS selector again using `rvest::html_nodes` and then use a different function, `rvest::html_text`, to parse out all the text inside the element. The results look a little funky because it's just jumbled text, but we can see it's providing us with the data we want. 
+```{r echo=T, include=T}
+listing_pages[1:5] %>% 
+  purrr::map(.,function(x) 
+    x %>% 
+      rvest::html_nodes(css='._520jgb') %>% 
+      rvest::html_text())
+```
+
+You can see what `rvest::html_text` will extract by inspecting the `DOM properties in the browser (shown below). 
+![](/posts/images/webscraping_airbnb/html_text_dom.gif)
+
+We can search this text and create attributes in our data set to make the listings easy to filter. This is basically our final product, but only for the first 18 listings. 
+```{r echo=T, include=T}
+bedding <- listing_pages %>% 
+  purrr::map(.,function(x) 
+    x %>% 
+      rvest::html_nodes(css='._520jgb') %>% 
+      rvest::html_text()) %>% 
+  tibble::tibble(Html_Text=.) %>% 
+  dplyr::mutate(King_Bed = stringr::str_detect(string=Html_Text,pattern='king bed'),
+                Queen_Bed = stringr::str_detect(string=Html_Text,pattern='queen bed'),
+                Double_Bed = stringr::str_detect(string=Html_Text,pattern='double bed'),
+                Bed_Count = stringr::str_count(string=Html_Text, pattern = 'bed'))
+listings_df <- dplyr::bind_cols(listings_df, bedding)
+listings_df %>% 
+  dplyr::select(-URL) %>% 
+  dplyr::mutate(Description = stringr::str_trunc(Description, 30, side='right'),
+                Html_Text = stringr::str_trunc(Html_Text, 30, side='right')) %>% ## Truncate the description and URL for format
+  dplyr::top_n(n=3) %>% ## to show the top 3 rows only, for brevity
+  kableExtra::kable(.) %>%
+  kableExtra::kable_styling(font_size = 7)
+```
+
+In order to get all the listings, we need to loop through the search page and pull out all the sets of listings until there are none left. To do so, we first have to figure out how to loop through the pages by hitting the next page button or using the associated `href`. We can inspect the next page button in the browser. Looking at the button, it appears to have some events configured and the href for those events is easy to see. The `href` has a property `items_offset` that is equal to `18`, the number of listings on the page. Once we hit the next button, that value changes to 36. 
+![](/posts/images/webscraping_airbnb/next_page.gif)
+
+Our base URL didn't have the `items_offset` property, but then again our base URL was not offset. I added this property to the base URL in my browser with `items_offset` equal to 18 and hit enter, the [results](https://www.airbnb.com/s/Lisbon--Portugal/homes?refinement_paths%5B%5D=%2Fhomes&screen_size=large&search_type=search_query&checkin=2020-03-19&checkout=2020-03-22&adults=2&room_types%5B%5D=Entire%20home%2Fapt&min_bedrooms=1&items_offset=18) were page two of the search page. This would be pretty simple to loop through and add to the end of the URL. However, I need to know the total number of pages to loop through first. In order to find that, I can inspect the page list at the bottom. The paging shows the first few, then an elipsis, then the last page. I can just pull these page number out of that CSS selector, `._11hau3k`, and find the highest number. 
+![](/posts/images/webscraping_airbnb/page_list.gif)
+
+We can pull the html node for the CSS selector, and pull the html attribute `data-id` because it appears to contain the page number. Then we can just find the max of that to determine how much pages we need to pull.
+```{r echo=T, include=T}
+list_of_pages <- search_page %>% rvest::html_nodes(css = '._11hau3k')
+page_numbers <- list_of_pages %>% rvest::html_children() %>% rvest::html_attr('data-id')
+last_page <- page_numbers[!is.na(stringr::str_detect(string=page_numbers,pattern = 'page-'))] %>%
+  stringr::str_replace_all(.,'-','') %>% 
+  readr::parse_number() %>% 
+  max()
+```
+
+Once we know the number of pages, we can put it all together. Putting it all together is going to require loading a much higher number of html pages , which takes a bit more time. We can speed this up with Davis Vaughan's [furrr package](https://github.com/DavisVaughan/furrr). It uses the same sytax as purrr to provide parralel functional programming tools, which allows us to simply swap it's functions in place of `purrr::map`. I also decided to add in a field for patios and balconies, but the process was the same :smile:
+```{r echo=T, include=T}
+search_pages <- furrr::future_map(1:last_page, function(x) paste0('https://www.airbnb.com/s/Lisbon--Portugal/homes?refinement_paths%5B%5D=%2Fhomes&screen_size=large&search_type=search_query&checkin=2020-03-19&checkout=2020-03-22&adults=2&room_types%5B%5D=Entire%20home%2Fapt&min_bedrooms=1&items_offset=',x*18-18) %>% xml2::read_html())
+listings_descriptions <- furrr::future_map(search_pages, function(x) x %>% rvest::html_nodes(css = '._i24ijs') %>% rvest::html_attr(name = 'aria-label')) %>% 
+  set_names(paste0('page',1:last_page)) %>% 
+  dplyr::bind_rows() %>% 
+  tidyr::pivot_longer(cols = dplyr::starts_with('page'),
+                      names_to = 'Search_Page',
+                      values_to = 'Description')
+listings_urls <- furrr::future_map(search_pages, function(x) x %>% rvest::html_nodes(css = '._i24ijs') %>% rvest::html_attr(name = 'href')) %>% 
+  set_names(paste0('page',1:last_page)) %>% 
+  dplyr::bind_rows() %>% 
+  tidyr::pivot_longer(cols = dplyr::starts_with('page'),
+                      names_to = 'Search_Page',
+                      values_to = 'URL') %>% 
+  dplyr::mutate(URL = paste0('https://www.airbnb.com',URL))
+listings_df <- dplyr::bind_cols(listings_descriptions, listings_urls) %>% 
+  dplyr::select(-Search_Page1)
+listings_pages <- listings_df$URL %>% 
+  furrr::future_map(xml2::read_html)
+bedding <- listings_pages %>% 
+  furrr::future_map(.,function(x) 
+    x %>% 
+      rvest::html_nodes(css='._520jgb') %>% 
+      rvest::html_text()) %>% 
+  tibble::tibble(Html_Text=.) %>% 
+  dplyr::mutate(King_Bed = stringr::str_detect(string=Html_Text,pattern='king bed'),
+                Queen_Bed = stringr::str_detect(string=Html_Text,pattern='queen bed'),
+                Double_Bed = stringr::str_detect(string=Html_Text,pattern='double bed'),
+                Bed_Count = stringr::str_count(string=Html_Text, pattern = 'bed'))
+patio <- listings_pages %>% 
+  furrr::future_map(.,function(x) 
+    x %>% 
+      rvest::html_nodes(css='._1k6i3d4') %>% 
+      rvest::html_text()) %>% 
+  tibble::tibble(Space=.) %>%
+  dplyr::mutate(Patio_Balcony = stringr::str_detect(string=stringr::str_to_lower(Space),pattern='patio|balcony'))
+listings_df <- dplyr::bind_cols(listings_df, bedding) %>% 
+  dplyr::bind_cols(.,patio)
+dt_table <- listings_df %>%
+  dplyr::mutate(Description = stringr::str_trunc(Description, 
+                                                 width=20, 
+                                                 side = c("right"))) %>% 
+  dplyr::mutate(Description= paste0("<a href='",URL,"'>",Description,"</a>")) %>%
+  dplyr::select(Description, King_Bed, Queen_Bed, Bed_Count,Patio_Balcony) %>%
+  dplyr::rename('King'='King_Bed','Queen'='Queen_Bed','Beds'='Bed_Count','Outoor'='Patio_Balcony') %>% 
+  DT::datatable(escape=F,filter='top')
+css_sheet <- 'datatable_hugoHermet.css'
+invisible(file.copy(from=paste0(here::here(),'/content/posts/css/hello_world/',css_sheet),to=paste0(dt_table$dependencies[[1]]$src$file ,'/css/',css_sheet),overwrite = T))
+dt_table$dependencies[[1]]$stylesheet[1] <- 'css/datatable_hugoHermet.css'
+dt_table$dependencies[[1]]$stylesheet[2] <- 'css/datatable_hugoHermet.css'  
+dt_table 
+```
+
+

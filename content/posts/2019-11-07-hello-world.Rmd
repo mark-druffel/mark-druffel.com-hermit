@@ -1,5 +1,5 @@
 ---
-title: hello_world
+title: Why Blog?
 author: Mark Druffel
 date: '2019-11-07'
 slug: hello_world

@@ -2,33 +2,42 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Mark Druffel</title>
-    <link>https://www.mark-druffel.com/</link>
+    <link>/</link>
     <description>Recent content on Mark Druffel</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Thu, 07 Nov 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Mon, 02 Dec 2019 00:00:00 +0000</lastBuildDate>
     
-	<atom:link href="https://www.mark-druffel.com/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
-      <title>hello_world</title>
-      <link>https://www.mark-druffel.com/posts/hello_world/</link>
+      <title>Webscraping Airbnb Listings</title>
+      <link>/posts/airbnb_webscraping/</link>
+      <pubDate>Mon, 02 Dec 2019 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/airbnb_webscraping/</guid>
+      <description>IntroSearch PageIntroI got married earlier this year 💑 We decided to wait to have our honeymoon so we’re now in the process of planning. We booked our flights into Lisbon, Portugal and out of Barcelona, Spain! We want to book apartments for a few of the bigger cities ahead of time to make sure we get comfortable accomodations for the places we plan to stay in the longest.</description>
+    </item>
+    
+    <item>
+      <title>Why Blog?</title>
+      <link>/posts/hello_world/</link>
       <pubDate>Thu, 07 Nov 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://www.mark-druffel.com/posts/hello_world/</guid>
+      <guid>/posts/hello_world/</guid>
       <description>IntroWhy Blog?How to blog?My List of DS Blogs &amp;amp; Twitter AccountsIntroAt this year’s RStudio Conf David Robinson discussed the importance of sharing work publicly in his talk “The unreasonable effectiveness of public work.”. He attributed much of his own personal, professional success to the habit of sharing his work and encouraged others to adopt the habit. I had long considered writing a blog documenting much of my work.</description>
     </item>
     
     <item>
       <title>About Me</title>
-      <link>https://www.mark-druffel.com/about/</link>
+      <link>/about/</link>
       <pubDate>Wed, 30 Oct 2019 00:00:00 +0000</pubDate>
       
-      <guid>https://www.mark-druffel.com/about/</guid>
-      <description>Hi, I&amp;rsquo;m Mark Druffel!
-I&amp;rsquo;m a data science neophyte, I mutate ☕ + 🍺 into R code.
+      <guid>/about/</guid>
+      <description>Hi, I&#39;m Mark Druffel!
+I&#39;m a data science neophyte, I mutate ☕ + 🍺 into R code.
 Motivation
 Over the last 5 years I have found a passion for data analysis and software development. I set up this blog as a tool to reflect on what I learn during my journey and share it with the community. I hope the content will be useful to other newcomers and encourage collaboration. If you have any feedback or want to discuss any of the topics please feel free to reach out!</description>
     </item>

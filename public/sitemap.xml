@@ -3,22 +3,27 @@
   xmlns:xhtml="http://www.w3.org/1999/xhtml">
   
   <url>
-    <loc>https://www.mark-druffel.com/posts/hello_world/</loc>
+    <loc>/</loc>
+    <lastmod>2019-12-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/</loc>
+    <lastmod>2019-12-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/airbnb_webscraping/</loc>
+    <lastmod>2019-12-02T00:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>/posts/hello_world/</loc>
     <lastmod>2019-11-07T00:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://www.mark-druffel.com/</loc>
-    <lastmod>2019-11-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://www.mark-druffel.com/posts/</loc>
-    <lastmod>2019-11-07T00:00:00+00:00</lastmod>
-  </url>
-  
-  <url>
-    <loc>https://www.mark-druffel.com/about/</loc>
+    <loc>/about/</loc>
     <lastmod>2019-10-30T00:00:00+00:00</lastmod>
   </url>
   
