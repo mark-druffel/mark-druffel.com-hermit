@@ -7,8 +7,6 @@ categories: []
 tags:
   - webscraping
   - rvest
-  - RSelenium
-  - docker
 images: ~
 output:
   blogdown::html_page:
