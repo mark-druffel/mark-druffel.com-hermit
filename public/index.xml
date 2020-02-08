@@ -7,10 +7,29 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Mon, 02 Dec 2019 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Fri, 24 Jan 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
+    
+    <item>
+      <title>Setting Up an EC2 Server</title>
+      <link>/posts/setting-up-ec2/</link>
+      <pubDate>Fri, 24 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/setting-up-ec2/</guid>
+      <description>Requirements  AWS Console Login store info on Box? AWS pem file  Install PuTTY Go to the PuTTY site and download the 64-bit version of PuTTY. Stick with the default settings and complete the installation.
+Create a Token Log into AWS Management Console and go to S3. In S3, download the propeller-aws.pem file. Then, open PuTTYgen, load the propeller-aws.pem file, create a passphrase, and save it as a private key.</description>
+    </item>
+    
+    <item>
+      <title>Building a data pipeline with R and managing with Apache Airflow</title>
+      <link>/posts/r_and_airflow/</link>
+      <pubDate>Wed, 22 Jan 2020 00:00:00 +0000</pubDate>
+      
+      <guid>/posts/r_and_airflow/</guid>
+      <description>BackgroundWhat is a data pipelineWhy use a data pipelineHow a data pipeline worksBuilding a PipelineWhat is a data lake?Setting Up EC2Installing Airflow &amp;amp; RSetting Up &amp;amp; Configuring PostgresThe R FunctionsWriting a DAGScheduling &amp;amp; Monitoring the DAGClosingInstall R &amp;amp; Airflow OLDBackgroundHave you ever written a script or built an Excel workbook to process data for a colleague to then run the same process over and over when they ask?</description>
+    </item>
     
     <item>
       <title>Webscraping Airbnb Listings</title>

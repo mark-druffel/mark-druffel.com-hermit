@@ -1,0 +1,336 @@
+---
+title: Building a data pipeline with R and managing with Apache Airflow
+author: Mark Druffel
+date: '2020-01-22'
+slug: r_and_airflow
+categories: []
+tags:
+  - workflow_management
+  - python
+  - ubuntu
+  - airflow
+  - RScript
+  
+images: ~
+output:
+  blogdown::html_page:
+    toc: true
+---
+
+
+<div id="TOC">
+<ul>
+<li><a href="#background">Background</a><ul>
+<li><a href="#what-is-a-data-pipeline">What is a data pipeline</a></li>
+<li><a href="#why-use-a-data-pipeline">Why use a data pipeline</a></li>
+<li><a href="#how-a-data-pipeline-works">How a data pipeline works</a></li>
+</ul></li>
+<li><a href="#building-a-pipeline">Building a Pipeline</a><ul>
+<li><a href="#what-is-a-data-lake">What is a data lake?</a></li>
+<li><a href="#setting-up-ec2">Setting Up EC2</a></li>
+<li><a href="#installing-airflow-r">Installing Airflow &amp; R</a></li>
+<li><a href="#setting-up-configuring-postgres">Setting Up &amp; Configuring Postgres</a></li>
+<li><a href="#the-r-functions">The R Functions</a></li>
+<li><a href="#writing-a-dag">Writing a DAG</a></li>
+<li><a href="#scheduling-monitoring-the-dag">Scheduling &amp; Monitoring the DAG</a></li>
+<li><a href="#closing">Closing</a></li>
+<li><a href="#install-r-airflow-old">Install R &amp; Airflow OLD</a></li>
+</ul></li>
+<li><a href="#section"></a></li>
+</ul>
+</div>
+
+<div id="background" class="section level2">
+<h2>Background</h2>
+<p>Have you ever written a script or built an Excel workbook to process data for a colleague to then run the same process over and over when they ask? Maybe that same script or workbook often had additional features tacked on over time until you owned a brittle, monolithic process that was a thorn in your side… I’ve found myself in that predicment a number of times. Learning to code reduced most of the pain, but there’s still the challenge of scheduling and managing code as tasks without finding yourself in a full-time operational role. I’ve spent the past few months trying to learn more solutions to this problem and I want to reflect back on the journey and share a solution that’s working pretty well for me.</p>
+<p>Data pipelines and workflow management are topics I think a lot of people find confusing so, before I get to a solution, I want to discuss the what, the why, and the how. If you’re just here for code, jump to the <a href="#building-a-pipeline">Building a Pipeline</a> section. :point_down:</p>
+<div id="what-is-a-data-pipeline" class="section level3">
+<h3>What is a data pipeline</h3>
+<p>I get the question a lot, from technical and non-technical people alike so I’ll <a href="https://twitter.com/drob/status/928447584712253440">David Robinson’s</a> advice and get my answer in a blog post… According to Wikipedia, a <a href="https://en.wikipedia.org/wiki/Pipeline_(computing)">data pipeline</a> is “a set of data processing elements connected in series, where the output of one element is the input of the next one.” That definition is simple, but general. Many times the follow up question is, “what’s the difference between a data pipeline and ETL?” Jake Stein wrote an answer to that question in <a href="https://www.quora.com/What-is-the-difference-between-a-data-pipeline-and-an-ETL-pipeline?share=1">this</a> Quora post. He basically states that data pipelines are a general pattern and ETL implements that pattern in a specific way. So basically a data pipeline is a series of connected steps that input data and output data. Data pipelines are a core component of an analytics organization’s infrastructure and enable the organization to <a href="https://stackoverflow.com/questions/11707879/difference-between-scaling-horizontally-and-vertically-for-databases#11715598">vertically scale</a> these steps more effectively (from an HR &amp; IT perspective).</p>
+</div>
+<div id="why-use-a-data-pipeline" class="section level3">
+<h3>Why use a data pipeline</h3>
+<p>As a data scientist, I use my analytics toolkit to answer questions using data. The “using data” part is the elephant in the room. The majority of corporate data never makes it to a location that analytics professionals can access. I’ve owned business processes that were bootstrapped by Excel workbooks that would make my computer’s fan fire up as soon as my mouse hovered over icon… those Excel workbooks were packed with key business data that only my team had access to, which greatly limits the value. Building data pipelines is an approach to get data from business applications and business process to data consumers and to get analytics from the analytics functions back to the business applications and business processes. For us R users we think</p>
+<p>I would argue pretty much any functioning business has data pipelines, but many of them aren’t using a technical approach to vertically scale. That’s, in part, why many corporations end up with massive operations organizations that hold processes together with Microsoft Office and brute force.</p>
+</div>
+<div id="how-a-data-pipeline-works" class="section level3">
+<h3>How a data pipeline works</h3>
+<p>Let’s demonstrate how this all works with a theoretical example. I grew up in a family business, landscaping. The company sells work (contracts) to clients the same way any services firm would. That contract is a data asset containing key attributes about the project including pricing, estimated materials, estimated labor, etc.</p>
+<p><img src="/posts/images/r_and_airflow/contract_icon.png" style="width:10.0%;height:10.0%" /></p>
+<p>The landscaping crews will document records for each contract executed including a materials sheet (e.g. plants used, soil used, mulch used, equipment used, etc.). The materials sheet also contains key attributes (e.g. actual expenses) of each contract.</p>
+<p><img src="/posts/images/r_and_airflow/tree_icon.png" style="width:15.0%;height:15.0%" /></p>
+<p>The crew lead records hours worked for each resource on the contract in an hours sheet. Exactly like the materials sheet, the hours sheet contains key attributes of each contract.</p>
+<p><img src="/posts/images/r_and_airflow/clock_icon.png" style="width:10.0%;height:10.0%" /></p>
+<p>At the end of each week the back-office processes payroll and distributes checks. The hours sheet is an input to payroll since many resources are hourly employees. Payroll is also a data asset which is critical to calculating margins for each contract, but it does not explicitly contain key attributes of the contract because it’s processed on a weekly basis, not a contract basis.</p>
+<p><img src="/posts/images/r_and_airflow/payroll_icon.png" style="width:15.0%;height:15.0%" /></p>
+<p>When a contract is complete, the customer is invoiced. The invoice contains key attributes (e.g. actual income) of each contract.</p>
+<p><img src="/posts/images/r_and_airflow/invoice_icon.png" style="width:10.0%;height:10.0%" /></p>
+<p>Once the contract is closed the company will follow up to assess the satisfaction of the client with a net promoter survey.</p>
+<p><img src="/posts/images/r_and_airflow/thumbs_up_icon.png" style="width:10.0%;height:10.0%" /></p>
+<p>So that was a lot of words and pictures to say my family’s landscaping company runs like a business… They record data related to events, agreements, etc. in order to execute processes that support their teams who are out beautifying clients’ properties. In order to do so they often have to bring multiple data sources together to execute a process or inform a decision.</p>
+<p>The team may need to decrease costs, but want to be certain that they don’t impact quality. To determine what costs to cut, they may want to review all contract costs over time in order to better understand where the major costs are incurred. To facilitate, someone would pull together data from the supply sheets, the hours sheets, and the contracts (fixed costs), likely by hand in Excel. Doing so is cumbersome and error prone, but it gets the job done and the team is able to get value from the information.</p>
+<p><img src="/posts/images/r_and_airflow/excel_process.png" style="width:50.0%;height:50.0%" /></p>
+<p>The team reviews the cost data over time and starts asking more intelligent questions. They realize the cost data alone is not adequate context to make a decision. They need to see costs in the context of margins. To facilitate that need, they add payroll data and invoice data to the contract cost data to make another transformation layer. Further, in order to account for quality they decide to analyze the impact of certain project costs on NPS. If you reflect back on our definition of a data pipeline, they have now built one in Excel. Unfortunately the burden and risk of managing that process in Excel is high…</p>
+<p><img src="/posts/images/r_and_airflow/excel_process_cont.gif" style="width:50.0%;height:50.0%" /></p>
+<p>In order to reduce the cost and risks the company hires a data analyst writes scripts to process the data transformations automagically. Voilà, problem solved :clap: Now the company can continue to progress without needing to hire an army of back-office resources.</p>
+<p><img src="/posts/images/r_and_airflow/R_process.png" style="width:50.0%;height:50.0%" /></p>
+<p>As the pipeline grows, additional processes will get added to the pipeline over time and eventually running the transformations manually becomes a burden. The cost of running these transformations manually is nominal, but it’s not stimulating work for anyone and users tend to be impatient if they rely on that data for their own work. That’s where you’ll want to use a task scheduler. If you’re in Unix/Linux cron is the easy first step and if you’re in Windows there’s a program called Task Scheduler. There’s also an R package for each called <a href="https://github.com/bnosac/cronR">cronR</a> and <a href="https://github.com/bnosac/taskscheduleR">taskscheduleR</a> respectively. Now we can schedule our transformations as a task and it will run without us.</p>
+<p><img src="/posts/images/r_and_airflow/r_process_scheduled.png" style="width:50.0%;height:50.0%" /></p>
+<p>Now the pipeline runs every morning and our users have what they need without the operational burden. However, if one of the transformations fails the entire pipeline fails because it’s one body of code. We can break the code up into chunks and manage them as separate tasks to avoid this issue. If one transformation fails the others will still execute with stale data from that task. That’s not ideal, but manageable for this tiny pipeline.</p>
+<p><img src="/posts/images/r_and_airflow/r_process_scheduled_fails.gif" style="width:50.0%;height:50.0%" /></p>
+<p>If the company expanded operations across multiple states and had to manage multiple locations with thousands of contracts a year, we wouldn’t be able to manage these upstream job failures without signifigant operational costs. Determining which processes failed and what was impacted is tedious work. Meanwhile, users will continue making decisions based off the stale data which leads to trust issues in the long-term. With only 3 locations it looks, and could even be, manageable. But with 30 or 300 it becomes completely untenable.</p>
+<p><img src="/posts/images/r_and_airflow/r_process_scheduled_multipleLocals.png" style="width:120.0%;height:120.0%" /></p>
+<p>As I mentioned in the intro, I have hit this wall a number of times and this is where workflow management comes in. Work management tools can schedule tasks, but also help us manage and monitor them with intelligence. In the case of our multiple location example, we can set each task to start when it’s parent task(s) complete. Workflow manage tools use <a href="https://www.astronomer.io/blog/what-exactly-is-a-dag/">DAGS</a>, which are basically the graphs we build when we form our sequences of tasks, to determine job dependencies.</p>
+<p>There are too many workflow management tools to count, but I found this <a href="https://github.com/common-workflow-language/common-workflow-language/wiki/Existing-Workflow-systems">list</a> very helpful to narrow my search a bit. A not to R users, <a href="https://github.com/ropensci/drake">drake</a> can help manage the task dependencies and is an excellent solution. However, many of my projects require a scheduler that can manage multiple languages so it doesn’t always suit my needs.</p>
+<p>I had some exposure to some of the more mature solutions including <a href="https://www.talend.com">Talend</a>, Alteryx (<a href="https://www.alteryx.com" class="uri">https://www.alteryx.com</a>), <a href="https://airflow.apache.org/">Apache-Airflow</a>, and <a href="https://github.com/spotify/luigi">Luigi</a> over the years. I also found some newer options like <a href="https://metaflow.org/">Metaflow</a> and <a href="https://www.prefect.io/">Prefect</a>. After doing a fair amount of research and taking a few of them for test drives I decided to go with Airflow for now. I landed on Airflow because it’s open source (nonnegotiable for me), it has a large community, the learning curve seemed fairly low, and it seems really flexible. There are some complexities in managing Airflow a few of which are eloquently explained in this post by <a href="https://medium.com/bluecore-engineering/were-all-using-airflow-wrong-and-how-to-fix-it-a56f14cb0753">Jessica Laughlin</a>, as well as some potential design flaws that <a href="https://medium.com/the-prefect-blog/why-not-airflow-4cfa423299c4">Chistopher White</a> outlined (disclaimer, Christopher White is the CTO @ Prefect). That being said, I’m really just looking for a smarter cron (at least for now) so Airflow seems like it should work well for me.</p>
+</div>
+</div>
+<div id="building-a-pipeline" class="section level2">
+<h2>Building a Pipeline</h2>
+<p>once I selected a solution to use, I had to set it up. I set up Airflow on <a href="https://aws.amazon.com/ec2/">EC2</a> with a Postgres backend. I’ll walk through the process by writing a few simple R functions to source and transform data, store the data in a data lake (<a href="https://aws.amazon.com/s3/">AWS S3</a>), schedule those functions as tasks, and review additional features in Airflow that help me manage those tasks.</p>
+<div id="what-is-a-data-lake" class="section level3">
+<h3>What is a data lake?</h3>
+<p>Quick pause to quickly define <a href="https://en.wikipedia.org/wiki/Data_lake">data lake</a> for those who are unfamiliar. Wikipedia’s definition is “a data lake is a system or repository of data stored in its natural/raw format, usually object blobs or files.” So basically <em>My Documents</em> for Windows users, or the random spot you save all your files for Mac users. Folders and meta data are the structure and structure is not enforced (i.e. if you try to save your homework in the folder labeled “Fun” your computer won’t throw an error). Many companies use data pipelines with a data lake as the first (or more) layer of storage. Storing the data in a lake enables the team building the pipeline to make data available to consumers without requiring them to structure all the data before obtaining value. Organizations frequently build their <a href="https://en.wikipedia.org/wiki/Data_warehouse">data warehouse</a> and data marts on top of the lake, which is where consumers can access transformed data. The pipeline I will build in this example structures data, but stores it in a data lake simply because it’s cheap and simple and it’s not the focus of the post. The data lake will be on AWS S3, which is one of AWS’ data lake <a href="https://aws.amazon.com/big-data/datalakes-and-analytics/">offerings</a>.</p>
+</div>
+<div id="setting-up-ec2" class="section level3">
+<h3>Setting Up EC2</h3>
+<p>If you have set</p>
+</div>
+<div id="installing-airflow-r" class="section level3">
+<h3>Installing Airflow &amp; R</h3>
+<pre class="bash"><code>#
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html
+## Ubuntu instead of AMI
+https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/EC2_GetStarted.html#ec2-launch-instance
+
+## Update everything on the server
+sudo apt update
+
+## Install pip for python3
+sudo apt install -y python3-pip
+
+## Install git
+sudo apt install -y git
+## NEED TO CONFIGURE GITHUB USER, SHOULD BE DIFFERENT FOR EACH PERSON ON THE SERVER OR HAVE A PROP ADMIN?
+echo &quot;export GITHUB_PAT=&lt;INSERT YOUR TOKEN&gt;&quot; &gt;&gt; ~/.bash_profile &amp;&amp; source ~/.bash_profile
+
+## Install python library for working with AWS
+sudo pip3 install boto3
+
+
+## Install some underlying requirements for airflow - encountered errors without these 
+sudo apt install -y libmysqlclient-dev
+sudo apt install -y postgresql
+sudo apt install -y libssl-dev
+sudo apt install -y libcrypto++-dev
+sudo apt install -y libcurl4-openssl-dev
+sudo apt install -y libxml2-dev
+## Required to install pyscopg2 which is required for postgres
+sudo apt install -y libpq-dev 
+## Believe I had an issue when not using sudo, but need to look again... maybe should have just been pip3
+sudo pip3 install pybind11
+## Required to install pyscopg2 which is required for postgres
+pip3 install python-dev-tools
+## http://initd.org/psycopg/docs/install.html
+pip3 install psycopg2
+## Requirement for dataPipeline
+sudo apt install -y libsodium-dev
+## Requirement for testthat, rmarkdown, and a few others
+sudo apt install -y pandoc
+
+## Install R and some of the libraries we commonly use at Propeller for data engineering
+sudo apt-key adv --keyserver keyserver.ubuntu.com --recv-keys E298A3A825C0D65DFD57CBB651716619E084DAB9
+sudo add-apt-repository &#39;deb https://cloud.r-project.org/bin/linux/ubuntu bionic-cran35/&#39;
+sudo apt update
+sudo apt install r-base
+R --version
+
+## httr dependency
+sudo apt install -y libssl-dev
+## xml2 dependency
+sudo apt install -y libxml2-dev
+
+R
+install.packages(&#39;tidyverse&#39;)
+install.packages(&#39;httr&#39;)
+install.packages(&#39;devtools&#39;)
+install.packages(&#39;remotes&#39;)
+install.packages(&#39;naptime&#39;)
+install.packages(&#39;furrr&#39;)
+install.packages(&#39;argparse&#39;)
+## Install R libraries for working with AWS (e.g. aws.s3, aws.ec2, etc.)
+install.packages(&quot;awspack&quot;, repos = c(cloudyr = &quot;http://cloudyr.github.io/drat&quot;, getOption(&quot;repos&quot;)))
+## Install Propeller&#39;s R libraries
+remotes::install_github(&#39;propellerpdx/harvestR&#39;)
+remotes::install_github(&#39;propellerpdx/bambooR&#39;)
+remotes::install_github(&#39;propellerpdx/propUtils&#39;)
+remotes::install_github(&#39;propellerpdx/dataPipeline&#39;)
+q()
+
+## Install python library for working with R in python - make sure R is installed first
+pip3 install rpy2
+
+
+## 
+sudo SLUGIFY_USES_TEXT_UNIDECODE=yes pip3 install -U apache-airflow
+sudo pip3 install apache-airflow[aws,crypto,devel,github_enterprise,postgres,slack]
+
+## Confirm Airflow installed
+airflow version
+## Initiate the Airflow database
+airflow initdb
+## Initiate the Airflow webserver, close putty after this
+airflow webserver 
+## Initiate the Airflow scheduler, close putty after this 
+airflow scheduler
+
+
+## Make a simple R script to test harvestR is working and you can connect/write to S3
+mkdir ~/R/Scripts
+nano harvestR_get_table.R 
+--&gt;
+time_entries &lt;- harvestR::get_table(table = &#39;time_entries&#39;, 
+                                    user = &#39;327055&#39;, 
+                                    key = &#39;Bearer 1173449.pt.kz8tF3KAFVYlcqcav5qQeppfwC0Fa3VxV6m8QyneAH8gUDl9X06ggABy35lVZQjKeAGH8vfdDhcGwXorRPw7yg&#39;,
+                                    query = list(user_id = &#39;1483525&#39;))
+aws.s3::s3saveRDS(time_entries, object = &quot;time_entries_airflow.rds&quot;, bucket = &#39;propeller-test-lake&#39;)
+--&gt;
+Rscript ~/R/Scripts/harvestR_get_table.R
+
+cd ~/airflow
+mkdir dags
+nano airflow.cfg
+--&gt;
+dags_folder = ~/airflow/dags
+remote_logging = True
+remote_log_conn_id = MyS3Conn
+remote_base_log_folder = s3://propeller-test-lake/airflow_logs
+encrypt_s3_logs = False
+--&gt;
+cd dags
+nano harvestR_get_table.py
+--&gt;
+from builtins import range
+from datetime import timedelta
+
+import airflow
+from airflow.models import DAG
+from airflow.operators.bash_operator import BashOperator
+from airflow.operators.dummy_operator import DummyOperator
+
+args = {
+    &#39;owner&#39;: &#39;airflow&#39;,
+    &#39;start_date&#39;: airflow.utils.dates.days_ago(2),
+}
+
+dag = DAG(
+    dag_id=&#39;harvest_bash&#39;,
+    default_args=args,
+    schedule_interval=&#39;0 0 * * *&#39;,
+    dagrun_timeout=timedelta(minutes=60),
+)
+
+run_this_last = DummyOperator(
+    task_id=&#39;run_this_last&#39;,
+    dag=dag,
+)
+
+# [START howto_operator_bash]
+run_this = BashOperator(
+    task_id=&#39;harvestR_get_table&#39;,
+    bash_command=&#39;Rscript ~/R/Scripts/harvestR_get_table.R&#39;,
+    dag=dag,
+)
+# [END howto_operator_bash]
+
+run_this &gt;&gt; run_this_last
+
+if __name__ == &quot;__main__&quot;:
+    dag.cli()
+--&gt;
+
+## Kill Server, Restart Server
+ps aux | grep airflow
+## If scheduler is still running kill it with the code below
+airflow scheduler -D
+
+airflow webserver 
+
+#Now our dag should show up and we can turn it on from the GUI
+</code></pre>
+</div>
+<div id="setting-up-configuring-postgres" class="section level3">
+<h3>Setting Up &amp; Configuring Postgres</h3>
+</div>
+<div id="the-r-functions" class="section level3">
+<h3>The R Functions</h3>
+</div>
+<div id="writing-a-dag" class="section level3">
+<h3>Writing a DAG</h3>
+</div>
+<div id="scheduling-monitoring-the-dag" class="section level3">
+<h3>Scheduling &amp; Monitoring the DAG</h3>
+</div>
+<div id="closing" class="section level3">
+<h3>Closing</h3>
+<pre class="bash"><code>## Update everything on the server
+sudo apt update
+
+## Install pip for python3
+sudo apt install -y python3-pip
+
+## Install git
+sudo apt install -y git
+
+## Install python library for working with AWS
+sudo pip3 install boto3</code></pre>
+</div>
+<div id="install-r-airflow-old" class="section level3">
+<h3>Install R &amp; Airflow OLD</h3>
+<pre class="bash"><code>## Install some underlying requirements for airflow - encountered errors without these 
+sudo apt install -y libmysqlclient-dev
+sudo apt install -y postgresql
+sudo apt install -y libssl-dev
+sudo apt install -y libcrypto++-dev
+sudo apt install -y libcurl4-openssl-dev
+sudo apt install -y libxml2-dev
+sudo pip3 install pybind11
+
+## https://stackoverflow.com/questions/52203441/error-while-install-airflow-by-default-one-of-airflows-dependencies-installs-a
+sudo SLUGIFY_USES_TEXT_UNIDECODE=yes pip3 install -U apache-airflow
+sudo pip3 install apache-airflow[aws,crypto,devel,github_enterprise,postgres,slack]
+
+
+## Install R and some of the libraries we commonly use at Propeller for data engineering
+sudo apt install -y r-base
+R
+install.packages(&#39;tidyverse&#39;)
+install.packages(&#39;httr&#39;)
+install.pacakges(&#39;devtools&#39;)
+install.packages(&#39;remotes&#39;)
+install.packages(&#39;naptime&#39;)
+## Install R libraries for working with AWS (e.g. aws.s3, aws.ec2, etc.)
+install.packages(&quot;awspack&quot;, repos = c(cloudyr = &quot;http://cloudyr.github.io/drat&quot;, getOption(&quot;repos&quot;)))
+## Install Propeller&#39;s R libraries
+remotes::install_github(&#39;propellerpdx/harvestR&#39;)
+remotes::install_github(&#39;propellerpdx/bambooR&#39;)
+q()
+
+## Install python library for working with R in python - make sure R is installed first
+pip3 install rpy2
+
+sudo apt-get install r-cran-littler
+
+## Confirm Airflow installed
+airflow version
+## Initiate the Airflow database
+airflow initdb
+## Initiate the Airflow webserver, close putty after this
+airflow webserver 
+## Initiate the Airflow scheduler, close putty after this 
+airflow scheduler</code></pre>
+</div>
+</div>
+<div id="section" class="section level2">
+<h2></h2>
+</div>
