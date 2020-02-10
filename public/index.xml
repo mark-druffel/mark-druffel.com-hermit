@@ -7,20 +7,10 @@
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <copyright>This work is licensed under a Creative Commons Attribution-NonCommercial 4.0 International License.</copyright>
-    <lastBuildDate>Fri, 24 Jan 2020 00:00:00 +0000</lastBuildDate>
+    <lastBuildDate>Wed, 22 Jan 2020 00:00:00 +0000</lastBuildDate>
     
 	<atom:link href="/index.xml" rel="self" type="application/rss+xml" />
     
-    
-    <item>
-      <title>Setting Up an EC2 Server</title>
-      <link>/posts/setting-up-ec2/</link>
-      <pubDate>Fri, 24 Jan 2020 00:00:00 +0000</pubDate>
-      
-      <guid>/posts/setting-up-ec2/</guid>
-      <description>Requirements  AWS Console Login store info on Box? AWS pem file  Install PuTTY Go to the PuTTY site and download the 64-bit version of PuTTY. Stick with the default settings and complete the installation.
-Create a Token Log into AWS Management Console and go to S3. In S3, download the propeller-aws.pem file. Then, open PuTTYgen, load the propeller-aws.pem file, create a passphrase, and save it as a private key.</description>
-    </item>
     
     <item>
       <title>Building a data pipeline with R and managing with Apache Airflow</title>
