@@ -39,9 +39,7 @@ This point cannot be overstated. Not only does writing help us to understand wha
 
 David went on to reference Philip Guo's advice for academics that... 
 
-```{r echo=F}
-blogdown::shortcode('tweet', '1019978795862769665')
-```
+![](/posts/images/hello_world/philip_guo_tweet.PNG){width=80% height=80%}
 
 Throughout my career, I have encountered issues within organizations that have existed for years, and yet are completely undocumented. Teams typically find workarounds to manage the specific issues and those workarounds simply exist as tribal knowledge. Teams frequently justify the lack of documentation with rationales such as "we're not going to waste time documenting a bug that will get fixed" or "you can't really document this it's just something you have to learn firsthand." Corporations tend to think of all documentation as technical documentation or user manuals, which often further discourages users from documenting and sharing. However, lightweight communication tools such as blogs and tweets would enable employees to efficiently and effectively share their experiences and learn from one other. This would save significant time and mitigate risk when senior leaders leave a team. Further, it would serve as requirements for the development teams who may need to make technology changes.  
 

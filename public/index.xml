@@ -13,12 +13,12 @@
     
     
     <item>
-      <title>Building a data pipeline with R and managing with Apache Airflow</title>
+      <title>Building a data pipeline with R &amp; managing with Apache Airflow</title>
       <link>/posts/r_and_airflow/</link>
       <pubDate>Wed, 22 Jan 2020 00:00:00 +0000</pubDate>
       
       <guid>/posts/r_and_airflow/</guid>
-      <description>BackgroundWhat is a data pipelineWhy use a data pipelineHow a data pipeline worksBuilding a PipelineWhat is a data lake?Setting Up EC2Installing Airflow &amp;amp; RSetting Up &amp;amp; Configuring PostgresThe R FunctionsWriting a DAGScheduling &amp;amp; Monitoring the DAGClosingInstall R &amp;amp; Airflow OLDBackgroundHave you ever written a script or built an Excel workbook to process data for a colleague to then run the same process over and over when they ask?</description>
+      <description>BackgroundWhat is a data pipelineWhy use a data pipelineHow a data pipeline worksBuilding a PipelineWhat is a data lake?BackgroundHave you ever written a script or built an Excel workbook to process data for a colleague to then run the same process over and over when they ask? Maybe that same script or workbook often had additional features tacked on over time until you owned a brittle, monolithic process that was a thorn in your side… I’ve found myself in that predicment a number of times.</description>
     </item>
     
     <item>
@@ -45,8 +45,8 @@
       <pubDate>Wed, 30 Oct 2019 00:00:00 +0000</pubDate>
       
       <guid>/about/</guid>
-      <description>Hi, I&#39;m Mark Druffel!
-I&#39;m a data science neophyte, I mutate ☕ + 🍺 into R code.
+      <description>Hi, I&amp;rsquo;m Mark Druffel!
+I&amp;rsquo;m a data science neophyte, I mutate ☕ + 🍺 into R code.
 Motivation
 Over the last 5 years I have found a passion for data analysis and software development. I set up this blog as a tool to reflect on what I learn during my journey and share it with the community. I hope the content will be useful to other newcomers and encourage collaboration. If you have any feedback or want to discuss any of the topics please feel free to reach out!</description>
     </item>
